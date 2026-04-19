@@ -3,119 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Natillera LA FORTUNA - V8 Final</title>
+    <title>Natillera LA FORTUNA - V9 Profesional</title>
     <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
     <style>
-        :root { --primary: #2c3e50; --secondary: #27ae60; --accent: #f1c40f; --danger: #e74c3c; --wa: #25d366; }
+        :root { --primary: #2c3e50; --secondary: #27ae60; --accent: #f1c40f; --danger: #e74c3c; --wa: #25d366; --backup: #3498db; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
         .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .reloj { text-align: center; font-size: 1.1em; font-weight: bold; margin-bottom: 20px; color: #555; background: #eee; padding: 10px; border-radius: 8px; }
         .caja-resumen { background: #d1ecf1; border: 1px solid #bee5eb; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 20px; }
         .stat-card { background: #fff; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #ddd; border-top: 5px solid var(--secondary); }
+        .stat-card h3 { margin: 0; font-size: 0.85em; color: #777; }
+        .stat-card p { margin: 5px 0 0; font-size: 1.2em; font-weight: bold; color: var(--primary); }
         .tabs { display: flex; gap: 8px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; }
-        .tabs button { padding: 12px 18px; cursor: pointer; border: none; border-radius: 6px; background: var(--primary); color: white; font-weight: bold; }
+        .tabs button { padding: 12px 15px; cursor: pointer; border: none; border-radius: 6px; background: var(--primary); color: white; font-weight: bold; }
         form { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; border: 1px solid #eee; border-radius: 10px; background: #fafafa; margin-bottom: 25px; }
         .full { grid-column: span 2; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; font-size: 0.9em; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; font-size: 0.85em; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background: var(--primary); color: white; }
-        .content-sec { display: none; }
+        .btn-backup { background: var(--backup) !important; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1 style="text-align:center; color: var(--primary);">💰 Natillera "LA FORTUNA"</h1>
+    <h1 style="text-align:center;">💰 Natillera "LA FORTUNA"</h1>
     <div id="reloj" class="reloj"></div>
 
     <div class="caja-resumen">
-        <h2 style="margin:0">Saldo Real en Caja: <span id="saldo-caja" style="color:var(--secondary)">$0</span></h2>
+        <h2>Saldo en Caja (Nequi/Efectivo): <span id="saldo-real-efectivo">$0</span></h2>
     </div>
 
     <div class="stats-grid">
         <div class="stat-card"><h3>Aportes</h3><p id="st-aportes">$0</p></div>
-        <div class="stat-card"><h3>Intereses Cobrados</h3><p id="st-interes">$0</p></div>
-        <div class="stat-card"><h3>Ganancia Eventos</h3><p id="st-actividades">$0</p></div>
+        <div class="stat-card"><h3>Intereses</h3><p id="st-interes">$0</p></div>
+        <div class="stat-card"><h3>Actividades</h3><p id="st-actividades">$0</p></div>
         <div class="stat-card" style="border-top-color:var(--accent)"><h3>UTILIDAD TOTAL</h3><p id="st-utilidad">$0</p></div>
     </div>
 
     <div class="tabs">
-        <button onclick="showSec('sec-socios')">SOCIOS</button>
-        <button onclick="showSec('sec-aportes')" style="background:var(--wa)">APORTES + RECIBO</button>
+        <button onclick="showSec('sec-socios')">ASOCIADOS</button>
+        <button onclick="showSec('sec-aportes')" style="background:var(--wa)">APORTES</button>
         <button onclick="showSec('sec-prestamos')">PRÉSTAMOS</button>
-        <button onclick="showSec('sec-abonos')" style="background:var(--wa)">PAGOS CUOTAS</button>
-        <button onclick="showSec('sec-eventos')" style="background:var(--accent); color:black">ACTIVIDADES</button>
-        <button style="background:#1d6f42" onclick="exportarInformeCompleto()">📊 EXCEL CIERRE TOTAL</button>
+        <button onclick="showSec('sec-abonos')" style="background:var(--wa)">ABONOS</button>
+        <button onclick="showSec('sec-eventos')">ACTIVIDADES</button>
+        <button style="background:#1d6f42" onclick="exportarExcelTotal()">📊 EXCEL CIERRE</button>
+        <button class="btn-backup" onclick="respaldarDatos()">💾 GUARDAR BACKUP</button>
+        <button class="btn-backup" onclick="document.getElementById('inputRestaurar').click()">📂 RESTAURAR BACKUP</button>
+        <input type="file" id="inputRestaurar" style="display:none" onchange="restaurarDatos(event)">
     </div>
 
     <section id="sec-socios" class="content-sec" style="display:block">
-        <h2>Registro de Socios</h2>
+        <h2>Registro de Asociados</h2>
         <form id="form-socio">
-            <input type="text" id="s-nombre" placeholder="Nombre" required>
-            <input type="text" id="s-tel" placeholder="Celular" required>
+            <input type="text" id="s-nombre" placeholder="Nombre Completo" required>
+            <input type="text" id="s-cedula" placeholder="Cédula" required>
+            <input type="text" id="s-tel" placeholder="WhatsApp (Ej: 3229391042)" required>
             <input type="text" id="s-dir" placeholder="Dirección" class="full">
-            <button type="submit" class="full">Guardar Socio</button>
+            <button type="submit" class="full" style="background:var(--secondary); color:white; border:none; padding:10px;">Guardar Socio</button>
         </form>
-        <table id="tabla-socios"><thead><tr><th>Nombre</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody></tbody></table>
+        <table id="tabla-socios"><thead><tr><th>Nombre</th><th>Cédula</th><th>WhatsApp</th><th>Acción</th></tr></thead><tbody></tbody></table>
     </section>
 
-    <section id="sec-aportes" class="content-sec">
-        <h2>Aportes</h2>
+    <section id="sec-aportes" class="content-sec" style="display:none">
+        <h2>Registro de Aportes</h2>
         <form id="form-aporte">
-            <select id="a-socio" required class="full"><option value="">Seleccione Socio...</option></select>
-            <input type="number" id="a-monto" placeholder="Monto Aporte $" required>
+            <select id="a-socio" required class="full"></select>
+            <input type="number" id="a-monto" placeholder="Valor Aporte $" required>
             <input type="date" id="a-fecha" required>
-            <button type="submit" class="full" style="background:var(--wa); color:white">GUARDAR Y ENVIAR WA</button>
+            <button type="submit" class="full" style="background:var(--wa); color:white; border:none; padding:10px;">REGISTRAR Y ENVIAR COMPROBANTE</button>
         </form>
+        <table id="tabla-aportes"><thead><tr><th>Socio</th><th>Fecha</th><th>Valor</th></tr></thead><tbody></tbody></table>
     </section>
 
-    <section id="sec-prestamos" class="content-sec">
-        <h2>Préstamos</h2>
+    <section id="sec-prestamos" class="content-sec" style="display:none">
+        <h2>Préstamos (1 a 4 Cuotas)</h2>
         <form id="form-prestamo">
-            <select id="p-tipo" required><option value="socio">Socio (5%)</option><option value="tercero">Tercero (10%)</option></select>
-            <input type="text" id="p-nombre" placeholder="Deudor" required>
-            <input type="number" id="p-monto" placeholder="Capital $" required>
-            <input type="number" id="p-cuotas" placeholder="Meses" required>
-            <input type="date" id="p-fecha" required class="full">
-            <button type="submit" class="full">Crear Préstamo</button>
+            <select id="p-tipo" required><option value="socio">Asociado (5%)</option><option value="tercero">Externo (10%)</option></select>
+            <input type="text" id="p-nombre" placeholder="Nombre Deudor" required>
+            <input type="number" id="p-monto" placeholder="Valor Capital $" required>
+            <select id="p-cuotas" required><option value="1">1 Cuota</option><option value="2">2 Cuotas</option><option value="3">3 Cuotas</option><option value="4">4 Cuotas</option></select>
+            <input type="text" id="p-codeudor" placeholder="Socio Fiador">
+            <input type="date" id="p-fecha" required>
+            <button type="submit" class="full" style="background:var(--secondary); color:white; border:none; padding:10px;">Desembolsar Préstamo</button>
         </form>
-        <table id="tabla-prestamos"><thead><tr><th>Deudor</th><th>Total</th><th>Cuotas</th><th>Saldo</th></tr></thead><tbody></tbody></table>
+        <table id="tabla-prestamos"><thead><tr><th>Fecha</th><th>Deudor</th><th>Total con Int.</th><th>Saldo</th><th>Codeudor</th></tr></thead><tbody></tbody></table>
     </section>
 
-    <section id="sec-abonos" class="content-sec">
-        <h2>Abonos</h2>
+    <section id="sec-abonos" class="content-sec" style="display:none">
+        <h2>Recaudo de Pagos</h2>
         <form id="form-abono">
             <select id="ab-prestamo" required class="full"></select>
-            <input type="number" id="ab-monto" placeholder="Monto abonado $" required>
+            <input type="number" id="ab-monto" placeholder="Valor Abono $" required>
             <input type="date" id="ab-fecha" required>
-            <button type="submit" class="full" style="background:var(--wa); color:white">REGISTRAR PAGO WA</button>
+            <button type="submit" class="full" style="background:var(--wa); color:white; border:none; padding:10px;">REGISTRAR ABONO Y NOTIFICAR</button>
         </form>
+        <table id="tabla-abonos"><thead><tr><th>Fecha</th><th>Deudor</th><th>Monto</th></tr></thead><tbody></tbody></table>
     </section>
 
-    <section id="sec-eventos" class="content-sec">
-        <h2>Actividades</h2>
+    <section id="sec-eventos" class="content-sec" style="display:none">
+        <h2>Actividades (Rifas / Ventas)</h2>
         <form id="form-actividad">
             <input type="text" id="act-nombre" placeholder="Actividad" required>
-            <input type="number" id="act-costo" placeholder="Gasto $">
-            <input type="number" id="act-venta" placeholder="Venta $">
+            <input type="number" id="act-costo" placeholder="Dinero de caja (Gasto) $" required>
+            <input type="number" id="act-venta" placeholder="Venta Total (Ingreso) $" required>
             <input type="date" id="act-fecha" required>
-            <button type="submit" class="full">Registrar</button>
+            <button type="submit" class="full" style="background:var(--secondary); color:white; border:none; padding:10px;">Guardar Actividad</button>
         </form>
+        <table id="tabla-actividades"><thead><tr><th>Actividad</th><th>Gasto</th><th>Ingreso</th><th>Utilidad</th></tr></thead><tbody></tbody></table>
     </section>
+
+    <p style="text-align: center; font-size: 0.8em; margin-top: 20px;">Hecha por <strong>Vibras Positivas HM</strong></p>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('fortunaDB_V8')) || { socios: [], aportes: [], prestamos: [], abonos: [], actividades: [] };
-    const adminWA = "573229391042";
+    // BASE DE DATOS
+    let db = JSON.parse(localStorage.getItem('laFortuna_V10')) || { socios: [], aportes: [], prestamos: [], abonos: [], actividades: [] };
 
     function guardar() {
-        localStorage.setItem('fortunaDB_V8', JSON.stringify(db));
+        localStorage.setItem('laFortuna_V10', JSON.stringify(db));
         actualizarTodo();
     }
 
+    // --- NUEVAS FUNCIONES DE BACKUP ---
+    function respaldarDatos() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+        const downloadAnchorNode = document.createElement('a');
+        const fecha = new Date().toLocaleDateString().replace(/\//g, '-');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "BACKUP_FORTUNA_" + fecha + ".json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+
+    function restaurarDatos(event) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                if (confirm("¿Estás seguro de que quieres sobrescribir los datos actuales con esta copia de seguridad?")) {
+                    db = importedData;
+                    guardar();
+                    alert("¡Datos restaurados con éxito!");
+                }
+            } catch (err) {
+                alert("Error al leer el archivo. Asegúrate de que sea un backup válido.");
+            }
+        };
+        reader.readAsText(event.target.files[0]);
+    }
+
+    // REPETICIÓN DE LÓGICA DE ACTUALIZACIÓN (IGUAL A LA ANTERIOR)
     setInterval(() => {
-        document.getElementById('reloj').innerText = "Fecha/Hora Colombia: " + new Date().toLocaleString("es-CO");
+        document.getElementById('reloj').innerText = "Vibras Positivas HM - " + new Date().toLocaleString("es-CO");
     }, 1000);
 
     function showSec(id) {
@@ -123,9 +165,12 @@
         document.getElementById(id).style.display = 'block';
     }
 
-    // FORMULARIOS (APORTES, PRESTAMOS, ABONOS, ACTIVIDADES)
-    document.getElementById('form-socio').onsubmit = function(e) { e.preventDefault(); db.socios.push({id: Date.now(), nombre: document.getElementById('s-nombre').value, tel: document.getElementById('s-tel').value}); guardar(); this.reset(); };
-    
+    document.getElementById('form-socio').onsubmit = function(e) {
+        e.preventDefault();
+        db.socios.push({id: Date.now(), nombre: document.getElementById('s-nombre').value, cedula: document.getElementById('s-cedula').value, tel: document.getElementById('s-tel').value, dir: document.getElementById('s-dir').value});
+        guardar(); this.reset();
+    };
+
     document.getElementById('form-aporte').onsubmit = function(e) {
         e.preventDefault();
         const sId = document.getElementById('a-socio').value;
@@ -133,17 +178,18 @@
         const fecha = document.getElementById('a-fecha').value;
         const socio = db.socios.find(s => s.id == sId);
         db.aportes.push({ socioId: sId, monto, fecha });
-        const msg = `*RECIBO LA FORTUNA*%0A📝 TIPO: APORTE QUINCENAL%0A🤝 SOCIO: ${socio.nombre}%0A💰 VALOR: $${monto.toLocaleString()}%0A📅 FECHA: ${fecha}`;
-        guardar(); window.open(`https://wa.me/${adminWA}?text=${msg}`, '_blank'); this.reset();
+        const totalSocio = db.aportes.filter(a => a.socioId == sId).reduce((sum, a) => sum + a.monto, 0);
+        const msg = `*LA FORTUNA - RECIBO DE APORTE*%0A🤝 ASOCIADO: ${socio.nombre}%0A💰 MONTO: $${monto.toLocaleString()}%0A📈 TOTAL AHORRADO: $${totalSocio.toLocaleString()}%0A📅 FECHA: ${fecha}`;
+        guardar(); window.open(`https://wa.me/57${socio.tel}?text=${msg}`, '_blank'); this.reset();
     };
 
     document.getElementById('form-prestamo').onsubmit = function(e) {
         e.preventDefault();
         const cap = parseFloat(document.getElementById('p-monto').value);
-        const meses = parseInt(document.getElementById('p-cuotas').value);
+        const cuotas = parseInt(document.getElementById('p-cuotas').value);
         const tasa = document.getElementById('p-tipo').value === 'socio' ? 0.05 : 0.10;
-        const tot = cap + (cap * tasa * meses);
-        db.prestamos.push({ id: Date.now(), deudor: document.getElementById('p-nombre').value, capital: cap, totalPagar: tot, numCuotas: meses, valorCuota: tot/meses, saldo: tot, interesTotal: cap*tasa*meses, fecha: document.getElementById('p-fecha').value });
+        const interesTotal = cap * tasa * cuotas;
+        db.prestamos.push({id: Date.now(), deudor: document.getElementById('p-nombre').value, capital: cap, totalPagar: cap + interesTotal, cuotas: cuotas, saldo: cap + interesTotal, interesTotal: interesTotal, fecha: document.getElementById('p-fecha').value});
         guardar(); this.reset();
     };
 
@@ -151,71 +197,68 @@
         e.preventDefault();
         const pId = document.getElementById('ab-prestamo').value;
         const monto = parseFloat(document.getElementById('ab-monto').value);
+        const fecha = document.getElementById('ab-fecha').value;
         const pIdx = db.prestamos.findIndex(p => p.id == pId);
         if(pIdx !== -1) {
-            db.abonos.push({ prestamoId: pId, monto, fecha: document.getElementById('ab-fecha').value, deudor: db.prestamos[pIdx].deudor });
+            db.abonos.push({ prestamoId: pId, monto, fecha, deudor: db.prestamos[pIdx].deudor });
             db.prestamos[pIdx].saldo -= monto;
-            const msg = `*RECIBO LA FORTUNA*%0A📝 TIPO: PAGO PRÉSTAMO%0A👤 DEUDOR: ${db.prestamos[pIdx].deudor}%0A💸 ABONO: $${monto.toLocaleString()}%0A📉 SALDO: $${db.prestamos[pIdx].saldo.toLocaleString()}%0A📅 FECHA: ${document.getElementById('ab-fecha').value}`;
-            guardar(); window.open(`https://wa.me/${adminWA}?text=${msg}`, '_blank'); this.reset();
+            const msg = `*LA FORTUNA - RECIBO DE PAGO*%0A👤 CLIENTE: ${db.prestamos[pIdx].deudor}%0A💸 MONTO: $${monto.toLocaleString()}%0A📉 SALDO: $${db.prestamos[pIdx].saldo.toLocaleString()}%0A📅 FECHA: ${fecha}`;
+            guardar(); window.open(`https://wa.me/573229391042?text=${msg}`, '_blank'); this.reset();
         }
     };
 
-    document.getElementById('form-actividad').onsubmit = function(e) { e.preventDefault(); const g = parseFloat(document.getElementById('act-costo').value) || 0; const v = parseFloat(document.getElementById('act-venta').value) || 0; db.actividades.push({ nombre: document.getElementById('act-nombre').value, gasto: g, venta: v, ganancia: v-g, fecha: document.getElementById('act-fecha').value }); guardar(); this.reset(); };
+    document.getElementById('form-actividad').onsubmit = function(e) {
+        e.preventDefault();
+        const g = parseFloat(document.getElementById('act-costo').value);
+        const v = parseFloat(document.getElementById('act-venta').value);
+        db.actividades.push({ nombre: document.getElementById('act-nombre').value, gasto: g, venta: v, ganancia: v-g, fecha: document.getElementById('act-fecha').value });
+        guardar(); this.reset();
+    };
 
     function actualizarTodo() {
-        document.getElementById('a-socio').innerHTML = '<option value="">Seleccione...</option>' + db.socios.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
-        document.getElementById('ab-prestamo').innerHTML = '<option value="">Seleccione...</option>' + db.prestamos.filter(p => p.saldo > 0).map(p => `<option value="${p.id}">${p.deudor}</option>`).join('');
+        document.getElementById('a-socio').innerHTML = db.socios.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
+        document.getElementById('ab-prestamo').innerHTML = db.prestamos.filter(p => p.saldo > 0).map(p => `<option value="${p.id}">${p.deudor}</option>`).join('');
 
         const tAportes = db.aportes.reduce((sum, a) => sum + a.monto, 0);
         const tAbonos = db.abonos.reduce((sum, ab) => sum + ab.monto, 0);
         const tVentasA = db.actividades.reduce((sum, act) => sum + act.venta, 0);
         const tGastosA = db.actividades.reduce((sum, act) => sum + act.gasto, 0);
         const tCapP = db.prestamos.reduce((sum, p) => sum + p.capital, 0);
-        const tInteresC = db.abonos.reduce((sum, ab) => { const p = db.prestamos.find(pr => pr.id == ab.prestamoId); return sum + (p ? (ab.monto * (p.interesTotal / p.totalPagar)) : 0); }, 0);
+        const tInteresRec = db.abonos.reduce((sum, ab) => {
+            const p = db.prestamos.find(pr => pr.id == ab.prestamoId);
+            return sum + (p ? (ab.monto * (p.interesTotal / p.totalPagar)) : 0);
+        }, 0);
 
+        const saldoReal = (tAportes + tAbonos + tVentasA) - (tGastosA + tCapitalP);
         document.getElementById('st-aportes').innerText = `$${tAportes.toLocaleString()}`;
-        document.getElementById('st-interes').innerText = `$${tInteresC.toLocaleString()}`;
+        document.getElementById('st-interes').innerText = `$${Math.round(tInteresRec).toLocaleString()}`;
         document.getElementById('st-actividades').innerText = `$${(tVentasA - tGastosA).toLocaleString()}`;
-        document.getElementById('st-utilidad').innerText = `$${(tInteresC + (tVentasA - tGastosA)).toLocaleString()}`;
-        document.getElementById('saldo-caja').innerText = `$${((tAportes + tAbonos + tVentasA) - (tGastosA + tCapP)).toLocaleString()}`;
+        document.getElementById('st-utilidad').innerText = `$${Math.round(tInteresRec + (tVentasA - tGastosA)).toLocaleString()}`;
+        document.getElementById('saldo-real-efectivo').innerText = `$${Math.round(saldoReal).toLocaleString()}`;
 
-        document.querySelector('#tabla-socios tbody').innerHTML = db.socios.map((s, i) => `<tr><td>${s.nombre}</td><td>${s.tel}</td><td><button onclick="db.socios.splice(${i},1);guardar()">X</button></td></tr>`).join('');
-        document.querySelector('#tabla-prestamos tbody').innerHTML = db.prestamos.map(p => `<tr><td>${p.deudor}</td><td>$${p.totalPagar.toLocaleString()}</td><td>${p.numCuotas}</td><td>$${p.saldo.toLocaleString()}</td></tr>`).join('');
+        document.querySelector('#tabla-socios tbody').innerHTML = db.socios.map((s,i) => `<tr><td>${s.nombre}</td><td>${s.tel}</td><td><button onclick="db.socios.splice(${i},1);guardar()">X</button></td></tr>`).join('');
+        document.querySelector('#tabla-prestamos tbody').innerHTML = db.prestamos.map(p => `<tr><td>${p.fecha}</td><td>${p.deudor}</td><td>$${p.totalPagar.toLocaleString()}</td><td>$${p.saldo.toLocaleString()}</td></tr>`).join('');
     }
 
-    // FUNCIÓN DE EXCEL ACTUALIZADA CON LIQUIDACIÓN
-    function exportarInformeCompleto() {
+    function exportarExcelTotal() {
         const tAportesG = db.aportes.reduce((sum, a) => sum + a.monto, 0);
         const tInteresG = db.abonos.reduce((sum, ab) => {
             const p = db.prestamos.find(pr => pr.id == ab.prestamoId);
             return sum + (p ? (ab.monto * (p.interesTotal / p.totalPagar)) : 0);
         }, 0);
         const tActG = db.actividades.reduce((sum, act) => sum + act.ganancia, 0);
-        const uTotal = tInteresG + tActG;
+        const uPorSocio = db.socios.length > 0 ? ((tInteresG + tActG) / db.socios.length) : 0;
 
-        // Crear Datos de Liquidación
-        const liquidacion = db.socios.map(s => {
+        const dataLiq = db.socios.map(s => {
             const apS = db.aportes.filter(a => a.socioId == s.id).reduce((sum, a) => sum + a.monto, 0);
-            const part = tAportesG > 0 ? (apS / tAportesG) : 0;
-            const ganInteres = tInteresG * part;
-            const ganEventos = tActG * part;
-            return {
-                "Socio": s.nombre,
-                "Aportes Capital": apS,
-                "% Participación": (part * 100).toFixed(2) + "%",
-                "Utilidad x Intereses": ganInteres.toFixed(0),
-                "Utilidad x Eventos": ganEventos.toFixed(0),
-                "GANANCIA TOTAL": (ganInteres + ganEventos).toFixed(0),
-                "TOTAL A RECIBIR (Cierre)": (apS + ganInteres + ganEventos).toFixed(0)
-            };
+            return { "Cédula": s.cedula || "N/A", "Socio": s.nombre, "Aportes": apS, "Utilidad": Math.round(uPorSocio), "Total": Math.round(apS + uPorSocio) };
         });
 
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(liquidacion), "LIQUIDACION_CIERRE");
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(db.prestamos), "PRESTAMOS");
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dataLiq), "LIQUIDACION");
         XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(db.aportes), "APORTES");
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(db.actividades), "ACTIVIDADES");
-        XLSX.writeFile(wb, "REPORTE_FINAL_FORTUNA.xlsx");
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(db.prestamos), "PRESTAMOS");
+        XLSX.writeFile(wb, "CIERRE_LA_FORTUNA.xlsx");
     }
 
     actualizarTodo();
