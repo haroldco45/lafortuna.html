@@ -1,20 +1,16 @@
-# Natillera "LA FORTUNA" v8 - Sistema de Gestión
+# Natillera "LA FORTUNA" v10
+### Desarrollado por Vibras Positivas HM
 
-Software de control financiero diseñado para la administración de natilleras familiares y fondos de empleados.
+Sistema contable para la gestión transparente de ahorros y préstamos familiares.
 
-## Características Principales:
-- **Gestión de Socios:** Base de datos local con información de contacto.
-- **Contabilidad Automatizada:** Cálculo de intereses (5% internos / 10% externos).
-- **Reparto Equitativo:** Distribución de utilidades en partes iguales entre los socios.
-- **Control de Caja:** Diferenciación entre Inversión y Ganancia en actividades especiales.
-- **Notificaciones:** Integración con WhatsApp para envío de recibos y estados de cuenta en tiempo real.
-- **Seguridad de Datos:** Funciones de Backup (Copia) y Restaurar para migración de equipos.
-- **Reportes:** Exportación multilingüe a Excel con hojas de liquidación detalladas.
+## Funcionalidades
+- **Base de Datos de Socios:** Control por cédula y contacto.
+- **Aportes:** Generación de recibos digitales vía WhatsApp.
+- **Préstamos:** Sistema de amortización de 1 a 4 cuotas con intereses diferenciados.
+- **Caja Menor:** Registro de egresos para actividades y cálculo de utilidad neta.
+- **Reparto Equitativo:** Distribución de ganancias en partes iguales entre todos los socios.
+- **Exportación:** Reportes completos en formato Excel con hoja de liquidación incluida.
 
-## Requisitos:
-- Navegador Web (Chrome, Edge, Safari).
-- Conexión a Internet (solo para enviar mensajes por WhatsApp).
-
----
-Hecho por: **Vibras Positivas HM**
-Soporte: info@vibraspositivas.com
+## Notas Técnicas
+Los datos se almacenan en el almacenamiento local del navegador (LocalStorage). 
+Se recomienda realizar un **BACKUP** semanalmente para evitar pérdida de datos si se borra el historial.
